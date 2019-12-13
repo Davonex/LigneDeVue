@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!--VERSION 1.1-->
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <title>Asylum</title>
+
+        <link rel="stylesheet" type="text/css" href="assets/css/conan.css">
+
+        <script src="lib/jquery-3.1.1.js"></script>
+        <script src="lib/mapconan.js"></script>
+        <script src="lib/raphael.min.js"></script>
+
+        <script type="text/javascript">
+			
+			var colors = `{
+			   "1" : "#01A3D6"
+            }`;
+			
+            var centers = `{
+                "cour1"  : {"A":[ 57,236],"promontory":false,"level":1},
+                "cour2"  : {"A":[ 569,99],"promontory":false,"level":1},
+                "cour3"  : {"A":[ 673,71],"promontory":false,"level":1},
+                "cour4"  : {"A":[ 570,680],"promontory":false,"level":1},
+                "cour5"  : {"A":[ 672,800],"promontory":false,"level":1},
+                "cour6"  : {"A":[ 42,852],"promontory":false,"level":1},
+                "bur1"  : {"A":[ 214,79],"promontory":false,"level":1},
+                "bur2"  : {"A":[ 336,82],"promontory":false,"level":1},
+                "bur3"  : {"A":[ 443,80],"promontory":false,"level":1},
+                "bur4"  : {"A":[ 217,241],"promontory":false,"level":1},
+                "bur5"  : {"A":[ 342,245],"promontory":false,"level":1},
+                "bur6"  : {"A":[ 440,239],"promontory":false,"level":1},
+                "bur7"  : {"A":[ 102,353],"promontory":false,"level":1},
+                "bur8"  : {"A":[ 346,353],"promontory":false,"level":1},
+                "bur9"  : {"A":[ 610,350],"promontory":false,"level":1},
+                "bur10"  : {"A":[ 102,562],"promontory":false,"level":1},
+                "bur11"  : {"A":[ 340,561],"promontory":false,"level":1},
+                "bur12"  : {"A":[ 612,569],"promontory":false,"level":1},
+                "bur13"  : {"A":[ 218,673],"promontory":false,"level":1},
+                "bur14"  : {"A":[ 342,671],"promontory":false,"level":1},
+                "bur15"  : {"A":[ 448,674],"promontory":false,"level":1},
+                "bur16"  : {"A":[ 214,823],"promontory":false,"level":1},
+                "bur17"  : {"A":[ 340,825],"promontory":false,"level":1},
+                "bur18"  : {"A":[ 450,823],"promontory":false,"level":1},
+                "all1"  : {"A":[ 816,66],"promontory":false,"level":1},
+                "all2"  : {"A":[ 758,272],"promontory":false,"level":1},
+                "all3"  : {"A":[ 753,462],"promontory":false,"level":1},
+                "all4"  : {"A":[ 744,616],"promontory":false,"level":1},
+                "all5"  : {"A":[ 793,814],"promontory":false,"level":1},
+                "all6"  : {"A":[ 1137,37],"promontory":false,"level":1},
+                "all7"  : {"A":[ 1006,159],"promontory":false,"level":1},
+                "all8"  : {"A":[ 973,432],"promontory":false,"level":1},
+                "all9"  : {"A":[ 989,653],"promontory":false,"level":1},
+                "all10"  : {"A":[ 1038,841],"promontory":false,"level":1},
+                "cel1"  : {"A":[ 903,96],"promontory":false,"level":1},
+                "cel2"  : {"A":[ 875,231],"promontory":false,"level":1},
+                "cel3"  : {"A":[ 857,389],"promontory":false,"level":1},
+                "cel4"  : {"A":[ 859,580],"promontory":false,"level":1},
+                "cel5"  : {"A":[ 863,694],"promontory":false,"level":1},
+                "cel6"  : {"A":[ 1142,194],"promontory":false,"level":1},
+                "cel7"  : {"A":[ 1115,323],"promontory":false,"level":1},
+                "cel8"  : {"A":[ 1099,466],"promontory":false,"level":1},
+                "cel9"  : {"A":[ 1105,599],"promontory":false,"level":1},
+                "cel10"  : {"A":[ 1126,740],"promontory":false,"level":1},
+                "cel11"  : {"A":[ 1161,880],"promontory":false,"level":1},            
+                "ent1"  : {"A":[ 83,456],"promontory":false,"level":1},            
+                "ent2"  : {"A":[ 213,452],"promontory":false,"level":1},            
+                "ent3"  : {"A":[ 346,454],"promontory":false,"level":1},           
+                "ent4"  : {"A":[ 470,456],"promontory":false,"level":1},            
+                "ent5"  : {"A":[ 605,458],"promontory":false,"level":1}            
+                
+            }`;
+
+             var lines = [
+			 
+                 ['cour1', 'bur4'],
+                 ['bur1', 'bur2'],
+                 ['bur2', 'bur3'],
+                 ['bur2', 'bur5'],
+                 ['bur3', 'cour2'],
+                 ['bur4', 'bur5'],
+                 ['bur5', 'bur6'],
+                 ['bur5', 'bur8'],
+                 ['bur7', 'bur8'],
+                 ['bur8', 'bur9'],
+                 ['bur8', 'ent3'],
+                 ['bur9', 'all2'],
+                 ['ent1', 'ent2'],
+                 ['ent2', 'ent3'],
+                 ['ent3', 'ent4'],
+                 ['ent3', 'bur11'],
+                 ['ent4', 'ent5'],
+                 ['ent5', 'all3'],
+                 ['bur10', 'bur11'],
+                 ['bur11', 'bur12'],
+                 ['bur11', 'bur14'],
+                 ['bur12', 'all4'],
+                 ['bur13', 'bur14'],
+                 ['bur14', 'bur15'],
+                 ['bur14', 'bur17'],
+                 ['bur15', 'cour4'],
+                 ['bur16', 'cour6'],
+                 ['bur16', 'bur17'],
+                 ['bur17', 'bur18'],
+                 ['cour3', 'all1'],
+                 ['cour5', 'all5'],
+                 ['cel1', 'all1'],
+                 ['cel2', 'all2'],
+                 ['cel3', 'all2'],
+                 ['cel3', 'all8'],
+                 ['cel4', 'all4'],
+                 ['cel5', 'all4'],
+                 ['cel6', 'all7'],
+                 ['cel7', 'all7'],
+                 ['cel8', 'all8'],
+                 ['cel9', 'all9'],
+                 ['cel10', 'all9'],
+                 ['cel11', 'all10'],
+                 ['all1', 'all2'],
+                 ['all1', 'all3'],
+                 ['all1', 'all4'],
+                 ['all2', 'all3'],
+                 ['all2', 'all4'],
+                 ['all2', 'all5'],
+                 ['all3', 'all4'],
+                 ['all3', 'all5'],
+                 ['all4', 'all5'],
+                 ['all5', 'all10'],
+                 ['all6', 'all7'],
+                 ['all7', 'all8'],
+                 ['all7', 'all9'],
+                 ['all8', 'all9'],
+                 ['all8', 'all10'],
+                 ['all9', 'all10']
+            ];
+
+            $(window).on("load", function() {
+                new Conan(centers, lines,colors);
+            });
+        </script>
+    </head>
+    <body>
+        <div id="options">
+            <ul>
+				<li>
+					<form>
+						<input type="checkbox" id="display-line" name="display-line" checked/><label for="display-line">Afficher lignes</label>
+						<input type="checkbox" id="display-zone" name="display-zone" checked/><label for="display-zone">Afficher zones</label>
+						<input type="checkbox" id="display-center" name="display-center" checked/><label for="display-center">Afficher centres</label>
+						<input type="checkbox" id="display-promontory" name="display-promontory"/><label for="display-promontory">Afficher promontoire</label>
+                        <input type="checkbox" id="display-level" name="display-level"/><label for="display-level">Afficher niveaux</label>
+					</form>
+				</li>
+        </div>
+        <div>
+            <img id="mapimage" src="assets/maps/asylum.png" id="" usemap="#map" />
+            <map name="map" id="map">
+				<area id="cour1" alt="" title="" href="" coords="1,1,100,1,98,196,147,220,148,265,100,245,100,284,1,284" shape="poly">
+				<area id="bur1" alt="" title="" href="" coords="106,4,280,6,280,23,310,63,310,101,288,71,282,75,282,150,106,150" shape="poly">
+				<area id="bur2" alt="" title="" href="" coords="314,67,293,24,291,11,351,11,352,28,372,69,373,104,360,83,351,81,350,135,315,135" shape="poly">
+				<area id="bur3" alt="" title="" href="" coords="376,64,357,26,358,10,531,10,537,80,534,92,531,148,360,148,360,88,377,114" shape="poly">
+				<area id="bur4" alt="" title="" href="" coords="151,220,106,194,106,158,282,158,282,199,312,226,310,264,283,246,281,293,106,295,104,250,152,269" shape="poly">
+				<area id="bur5" alt="" title="" href="" coords="314,138,350,138,352,204,371,224,372,264,357,250,353,307,366,316,315,316" shape="poly">
+				<area id="bur6" alt="" title="" href="" coords="377,224,358,202,358,158,531,157,531,296,360,296,357,255,377,270" shape="poly">
+				<area id="cour2" alt="" title="" href="" coords="539,1,603,0,607,287,540,285" shape="poly">
+				<area id="cour3" alt="" title="" href="" coords="624,1,749,1,727,63,716,97,698,159,693,192,683,263,682,283,626,284" shape="poly">
+				<area id="bur7" alt="" title="" href="" coords="20,303,97,304,98,315,148,331,147,374,98,367,96,380,20,380" shape="poly">
+				<area id="bur8" alt="" title="" href="" coords="153,330,106,313,106,302,286,303,314,318,367,318,357,305,532,304,531,314,537,330,537,367,531,369,531,379,352,382,360,388,328,388,299,382,105,380,105,371,151,375" shape="poly">
+				<area id="bur9" alt="" title="" href="" coords="542,329,540,316,540,303,686,303,687,314,676,331,677,374,688,370,687,381,539,382" shape="poly">
+				<area id="ent1" alt="" title="" href="" coords="8,420,7,383,18,385,65,387,100,387,150,396,147,519,102,525,91,527,20,526,7,528" shape="poly">
+				<area id="ent2" alt="" title="" href="" coords="151,397,172,397,175,388,248,388,286,389,286,523,256,526,247,526,149,523" shape="poly">
+				<area id="ent3" alt="" title="" href="" coords="286,521,286,392,327,392,367,392,422,395,422,522" shape="poly">
+				<area id="ent4" alt="" title="" href="" coords="423,395,537,394,538,521,424,520" shape="poly">
+				<area id="ent5" alt="" title="" href="" coords="538,395,691,393,691,419,679,424,679,488,691,491,690,521,540,521" shape="poly">
+				<area id="bur10" alt="" title="" href="" coords="20,532,102,532,149,534,149,582,100,594,97,605,18,605" shape="poly">
+				<area id="bur11" alt="" title="" href="" coords="151,534,301,533,328,525,361,524,353,534,535,532,534,549,540,550,540,585,534,607,357,606,368,590,315,591,288,607,105,605,104,594,153,583" shape="poly">
+				<area id="bur12" alt="" title="" href="" coords="540,533,679,534,693,531,690,543,681,541,680,585,693,605,540,605,543,588" shape="poly">
+				<area id="bur13" alt="" title="" href="" coords="106,611,282,611,280,658,286,658,312,641,312,684,282,710,282,754,105,755" shape="poly">
+				<area id="bur14" alt="" title="" href="" coords="314,593,363,593,351,606,351,662,373,643,372,683,351,706,352,779,314,780" shape="poly">
+				<area id="bur15" alt="" title="" href="" coords="376,639,358,645,358,611,532,610,534,670,539,669,539,695,534,722,532,755,360,757,358,708,377,688" shape="poly">
+				<area id="bur16" alt="" title="" href="" coords="104,761,280,762,282,832,314,801,312,842,283,884,280,901,104,902,104,886,147,842,148,797,106,831" shape="poly">
+				<area id="bur17" alt="" title="" href="" coords="315,782,351,781,353,827,370,801,370,841,349,884,348,901,289,901,288,886,317,843" shape="poly">
+				<area id="bur18" alt="" title="" href="" coords="377,792,358,816,360,762,531,762,534,902,355,902,354,885,375,841" shape="poly">
+				<area id="cour4" alt="" title="" href="" coords="539,623,604,623,604,908,540,909" shape="poly">
+				<area id="cour5" alt="" title="" href="" coords="625,624,691,625,697,688,700,718,709,754,716,804,723,834,735,884,747,907,625,909" shape="poly">
+				<area id="cour6" alt="" title="" href="" coords="1,622,97,623,97,835,103,835,145,801,144,841,100,887,100,909,1,908,1,818" shape="poly">
+				<area id="all1" alt="" title="" href="" coords="757,1,870,1,862,16,849,60,835,101,819,153,815,177,716,155,719,123,734,75,751,22" shape="poly">
+				<area id="all2" alt="" title="" href="" coords="716,158,815,182,813,202,805,242,790,296,795,310,791,357,791,375,696,376,694,369,683,370,682,332,694,314" shape="poly">
+				<area id="all3" alt="" title="" href="" coords="693,389,695,379,729,380,718,388,753,389,768,380,810,381,812,529,766,527,754,523,722,523,727,528,696,529,695,520,693,492,682,486,682,426,693,420" shape="poly">
+				<area id="all4" alt="" title="" href="" coords="698,531,792,533,793,557,797,605,797,653,803,661,811,703,808,719,709,708,696,598,682,583,683,542,696,543" shape="poly">
+				<area id="all5" alt="" title="" href="" coords="708,709,811,724,815,753,845,788,888,779,899,819,842,836,867,908,758,907,741,847,721,805,720,786,726,794,716,752" shape="poly">
+				<area id="cel1" alt="" title="" href="" coords="853,64,884,20,889,0,969,0,1006,17,966,159,854,125,870,70,862,69,841,97" shape="poly">
+				<area id="cel2" alt="" title="" href="" coords="817,205,847,174,854,134,963,165,940,297,828,274,838,226,827,223,811,239" shape="poly">
+				<area id="cel3" alt="" title="" href="" coords="798,312,824,298,825,284,936,305,933,382,899,391,894,438,930,437,927,453,814,451,821,343,796,353" shape="poly">
+				<area id="cel4" alt="" title="" href="" coords="815,461,929,461,938,619,825,630,824,619,799,607,798,562,821,570" shape="poly">
+				<area id="cel5" alt="" title="" href="" coords="805,664,832,681,826,638,940,630,963,754,850,776,842,728,814,704" shape="poly">
+				<area id="all6" alt="" title="" href="" coords="1020,-1,1215,0,1215,95,1133,64,1077,105,1072,120,993,93" shape="poly">
+				<area id="all7" alt="" title="" href="" coords="993,95,1071,123,1066,143,1056,181,1047,184,1033,231,1034,238,1028,280,1020,326,1013,340,944,325,946,300,954,256,970,170" shape="poly">
+				<area id="all8" alt="" title="" href="" coords="944,330,1014,346,1013,435,1010,482,1006,537,940,529,935,456,937,436,899,434,902,393,942,385" shape="poly">
+				<area id="all9" alt="" title="" href="" coords="940,532,1013,543,1021,612,1022,659,1028,664,1037,704,1048,749,1049,767,970,757,946,627" shape="poly">
+				<area id="all10" alt="" title="" href="" coords="970,761,1049,770,1057,800,1064,806,1078,842,1092,871,1103,907,1015,908,993,844,950,806,902,815,890,779" shape="poly">
+				<area id="cel6" alt="" title="" href="" coords="1070,145,1126,110,1137,76,1215,104,1215,249,1093,218,1111,155,1060,180" shape="poly">
+				<area id="cel7" alt="" title="" href="" coords="1033,283,1085,263,1090,223,1212,257,1191,380,1070,370,1077,314,1026,324" shape="poly">
+				<area id="cel8" alt="" title="" href="" coords="1015,437,1068,434,1070,379,1189,390,1183,517,1066,518,1066,483,1013,482" shape="poly">
+				<area id="cel9" alt="" title="" href="" coords="1018,567,1070,578,1066,526,1184,526,1200,651,1081,670,1077,627,1026,609" shape="poly">
+				<area id="cel10" alt="" title="" href="" coords="1084,679,1202,661,1215,708,1215,792,1119,820,1107,780,1056,749,1043,711,1095,732" shape="poly">
+				<area id="cel11" alt="" title="" href="" coords="1084,847,1136,885,1142,883,1120,829,1213,803,1215,908,1148,908,1093,870" shape="poly">
+            </map>
+        </div>
+    </body>
+</html>

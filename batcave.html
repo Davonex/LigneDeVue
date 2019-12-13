@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<!--VERSION 1.1-->
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <title>Batcave</title>
+
+        <link rel="stylesheet" type="text/css" href="assets/css/conan.css">
+
+        <script src="lib/jquery-3.1.1.js"></script>
+        <script src="lib/mapconan.js"></script>
+        <script src="lib/raphael.min.js"></script>
+
+        <script type="text/javascript">
+		
+			var colors = `{
+               "4" : "#767777",
+			   "1" : "#01A3D6",
+               "2" : "#CAE8FC",
+               "5" : "#CAE8FC",
+			   "6" : "#EFF976"
+            }`;
+
+            var centers = `{            
+                "wat1"  : {"A":[11,78],"B":[11,156],"promontory":false,"level":4},
+                "wat2"  : {"A":[ 149,25],"promontory":false,"level":4},
+                "wat3"  : {"A":[ 331,10],"promontory":false,"level":4},
+                "wat4"  : {"A":[ 146,220],"promontory":false,"level":4},
+                "wat5"  : {"A":[ 332,232],"promontory":false,"level":4},
+                "boat"  : {"A":[ 186,110],"promontory":true,"level":2},
+                "pas1"  : {"A":[ 472,77],"promontory":false,"level":1},
+                "pas2"  : {"A":[526,97],"B":[526,169],"promontory":false,"level":1},
+                "pas3"  : {"A":[ 465,217],"promontory":false,"level":1},
+                "pas4"  : {"A":[ 477,316],"promontory":false,"level":1},
+                "pas5"  : {"A":[ 274,316],"promontory":false,"level":1},
+                "pas6"  : {"A":[ 127,316],"promontory":false,"level":1},
+                "cel1"  : {"A":[ 85,396],"promontory":false,"level":1},
+                "cel2"  : {"A":[ 218,396],"promontory":false,"level":1},
+                "cel3"  : {"A":[ 338,395],"promontory":false,"level":1},
+                "cel4"  : {"A":[ 469,395],"promontory":false,"level":1},
+                "ron1"  : {"A":[ 758,105],"promontory":false,"level":1},
+                "tun1"  : {"A":[ 976,105],"promontory":false,"level":1},
+                "tun2"  : {"A":[ 1139,105],"promontory":false,"level":1},
+                "com1"  : {"A":[ 755,316],"promontory":false,"level":1},
+                "com2"  : {"A":[ 983,297],"promontory":false,"level":1},
+                "com3"  : {"A":[ 1108,298],"promontory":false,"level":1},
+                "arm1"  : {"A":[ 101,563],"promontory":false,"level":1},
+                "arm2"  : {"A":[ 137,653],"promontory":false,"level":1},
+                "arm3"  : {"A":[ 315,679],"promontory":false,"level":1},
+                "arm4"  : {"A":[ 492,677],"promontory":false,"level":1},
+                "arm5"  : {"A":[ 379,560],"promontory":false,"level":1},
+				"arm6"  : {"A":[ 235,807],"promontory":false,"level":1},
+                "tro1"  : {"A":[ 689,823],"promontory":false,"level":1},
+                "tro2"  : {"A":[ 775,724],"promontory":false,"level":1},
+                "tro3"  : {"A":[ 935,784],"promontory":false,"level":1},
+                "tro4"  : {"A":[ 1080,737],"promontory":false,"level":1},
+                "tro5"  : {"A":[ 783,573],"promontory":false,"level":2},
+                "tro6"  : {"A":[ 938,633],"promontory":false,"level":2},
+                "tro7"  : {"A":[ 1084,572],"promontory":false,"level":2},
+				"asc1"  : {"A":[ 564,151],"promontory":false,"level":1},
+                "asc2"  : {"A":[ 1173,302],"promontory":false,"level":1},
+                "asc3"  : {"A":[ 938,869],"promontory":false,"level":1},
+                "asc4"  : {"A":[ 574,677],"promontory":false,"level":1}
+            }`;
+
+             var lines = [
+				['wat1', 'wat2'],
+				['wat1', 'wat3'],
+				['wat1-B', 'wat4'],
+				['wat1-B', 'wat5'],
+				{
+                     "line" : ['boat', 'wat1-A'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['pas3', 'wat1-B'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['wat2', 'wat3'],
+				{
+                     "line" : ['boat', 'wat2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['pas1', 'wat3'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['boat', 'wat3'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['wat4', 'wat5'],
+				{
+                     "line" : ['pas3', 'wat4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['boat', 'wat4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+					
+
+				{
+                     "line" : ['pas3', 'wat5'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['boat', 'wat5'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },					
+				
+				['pas1','pas2'],
+				['pas1','pas3'],
+				['pas1','pas4'],
+				{
+                     "line" : ['boat', 'pas1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },	
+				
+				['pas2-B','pas3'],
+				{
+                     "line" : ['boat', 'pas2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },	
+				
+				['pas3','pas4'],
+				{
+                     "line" : ['boat', 'pas3'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['pas4','pas5'],
+				['pas4','pas6'],
+				
+				['pas5','pas6'],
+				
+				['ron1','tun1'],
+				['ron1','tun2'],
+				['ron1','com1'],
+				
+				['tun1','tun2'],
+				
+				['com1','com2'],
+				
+				['com2','com3'],
+				
+				['arm1','arm2'],
+				
+				['arm2','arm3'],
+				['arm2','arm4'],
+				
+				['arm3','arm4'],
+				['arm3','arm5'],
+				['arm3','arm6'],
+				
+				['tro1','tro2'],
+				{
+                     "line" : ['tro5', 'tro1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['tro6', 'tro1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['tro2','tro3'],
+				['tro2','tro4'],
+				{
+				      "line" : ['tro5', 'tro2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['tro6', 'tro2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['tro3','tro4'],
+				{
+				      "line" : ['tro5', 'tro3'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['tro6', 'tro3'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['tro7', 'tro3'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['tro6', 'tro4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['tro7', 'tro4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				 {
+                     "line" : ['tro6', 'tro5'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['tro7', 'tro5'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				
+				['tro6','tro7'],
+				
+				{
+                     "line" : ['boat', 'asc1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				['asc1', 'pas1'],
+				['asc1', 'pas2'],
+				['asc1', 'pas3'],
+				
+				['asc2', 'com2'],
+				['asc2', 'com3'],
+				
+				['asc3', 'tro2'],
+				['asc3', 'tro3'],
+				['asc3', 'tro4'],
+				{
+				      "line" : ['tro5', 'asc3'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['tro6', 'asc3'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['tro7', 'asc3'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				 {
+                     "line" : ['tro7', 'tro1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['asc4', 'arm2'],
+				['asc4', 'arm3'],
+				['asc4', 'arm4'],
+            ];
+
+            $(window).on("load", function() {
+                new Conan(centers, lines,colors);
+            });
+        </script>
+    </head>
+    <body>
+        <div id="options">
+            <ul>
+				<li>
+					<form>
+						<input type="checkbox" id="display-line" name="display-line" checked/><label for="display-line">Afficher lignes</label>
+						<input type="checkbox" id="display-zone" name="display-zone" checked/><label for="display-zone">Afficher zones</label>
+						<input type="checkbox" id="display-center" name="display-center" checked/><label for="display-center">Afficher centres</label>
+						<input type="checkbox" id="display-promontory" name="display-promontory"/><label for="display-promontory">Afficher promontoire</label>
+                        <input type="checkbox" id="display-level" name="display-level"/><label for="display-level">Afficher niveaux</label>
+					</form>
+				</li>
+        </div>
+        <div>
+            <img id="mapimage" src="assets/maps/batcave.png" id="" usemap="#map" />
+            <map name="map" id="map">
+				<area id="wat1" alt="" title="" href="" coords="0,56,22,56,33,54,39,57,49,54,60,54,24,107,14,114,22,118,47,185,39,191,32,187,24,189,16,185,7,189,1,186" shape="poly">
+				<area id="wat2" alt="" title="" href="" coords="28,107,61,54,76,32,100,12,115,0,259,0,206,47,196,59,173,66,166,59,158,67,152,72,144,79,116,85,120,81,130,78,125,73,110,81,108,88" shape="poly">
+				<area id="wat3" alt="" title="" href="" coords="207,47,260,0,416,1,414,10,408,15,414,27,412,52,412,66,392,54,376,52,349,53,338,52,320,45,308,40,293,44,278,47,261,50,244,51,230,54" shape="poly">
+				<area id="wat4" alt="" title="" href="" coords="24,120,35,124,44,130,56,133,133,147,142,155,149,151,160,160,167,166,175,158,192,165,194,172,202,177,209,177,274,265,95,265,67,240,52,211,47,196,38,191,50,186" shape="poly">
+				<area id="wat5" alt="" title="" href="" coords="211,177,268,170,291,179,300,178,310,168,319,173,337,167,396,168,407,162,414,160,414,264,276,263" shape="poly">
+				<area id="boat" alt="" title="" href="" coords="16,115,47,103,77,97,105,91,111,83,120,78,125,75,129,78,120,84,115,88,144,82,159,72,165,63,169,70,197,63,208,50,227,58,244,53,260,53,277,48,307,43,339,54,382,54,393,57,412,68,415,89,422,90,425,99,415,102,416,118,424,123,423,130,415,136,415,158,396,166,337,164,320,173,309,166,300,177,290,178,266,168,203,176,194,173,194,164,175,158,167,162,149,148,142,151,133,144,85,138,45,128" shape="poly">
+				<area id="pas1" alt="" title="" href="" coords="416,8,493,9,496,80,489,86,489,153,416,153,416,139,422,131,424,125,416,118,416,105,424,99,423,88,416,87,411,62,415,23,409,15" shape="poly">
+				<area id="pas2" alt="" title="" href="" coords="490,86,496,81,537,82,539,225,496,223,489,217" shape="poly">
+				<area id="pas3" alt="" title="" href="" coords="416,154,487,154,490,270,416,267" shape="poly">
+				<area id="pas4" alt="" title="" href="" coords="426,270,472,269,488,274,502,287,512,290,511,335,463,337,343,338,340,288,468,289,463,282,458,280,440,278" shape="poly">
+				<area id="pas5" alt="" title="" href="" coords="208,288,338,290,340,337,206,337" shape="poly">
+				<area id="pas6" alt="" title="" href="" coords="50,310,50,290,100,290,203,289,203,336,48,337" shape="poly">
+				<area id="cel1" alt="" title="" href="" coords="1,370,133,370,134,451,1,450" shape="poly">
+				<area id="cel2" alt="" title="" href="" coords="139,369,273,369,272,452,140,452" shape="poly">
+				<area id="cel3" alt="" title="" href="" coords="277,369,408,369,411,452,279,452" shape="poly">
+				<area id="cel4" alt="" title="" href="" coords="418,370,550,369,551,451,418,452" shape="poly">
+				<area id="ron1" alt="" title="" href="" coords="707,215,694,205,679,193,655,175,646,151,640,125,639,98,641,73,649,52,661,35,674,18,695,4,704,1,813,1,832,8,846,20,858,38,867,57,877,80,878,132,869,147,861,164,848,181,835,194,821,206,788,208,790,218,775,223,752,224,725,219,709,219" shape="poly">
+				<area id="tun1" alt="" title="" href="" coords="879,80,1053,81,1052,135,880,134" shape="poly">
+				<area id="tun2" alt="" title="" href="" coords="1055,81,1216,81,1216,137,1055,135" shape="poly">
+				<area id="com1" alt="" title="" href="" coords="667,236,659,226,678,223,687,232,703,228,707,219,725,218,737,222,757,225,776,223,795,218,837,220,822,258,833,273,846,275,848,312,820,344,840,389,839,411,837,445,626,443,631,430,633,414,687,380,672,384,661,386,654,382,653,372,661,365,663,351,634,359,633,345,665,331,665,320,629,320,626,301,658,292,657,279,627,279,626,262,668,260" shape="poly">
+				<area id="com2" alt="" title="" href="" coords="850,274,860,269,850,256,856,233,868,216,881,205,899,190,914,192,927,197,952,197,962,197,984,201,998,206,1014,209,1024,207,1036,207,1042,218,1053,224,1052,232,1065,251,1071,268,1072,283,1072,298,1069,319,1076,328,1108,341,1084,375,1086,390,1060,418,1052,420,1003,431,1001,439,982,438,934,418,929,430,908,420,920,408,881,372,874,387,854,355,838,337,845,331,836,323,852,314" shape="poly">
+				<area id="com3" alt="" title="" href="" coords="1054,225,1066,224,1078,224,1084,224,1095,224,1109,224,1125,232,1142,233,1145,372,1133,372,1116,370,1099,367,1090,387,1084,377,1108,340,1077,325,1069,320,1073,309,1074,295,1074,280,1072,267,1066,250,1055,237" shape="poly">
+				<area id="arm1" alt="" title="" href="" coords="70,614,66,508,64,501,73,493,82,498,145,499,147,609,106,611,107,620,129,628,100,626,76,620" shape="poly">
+				<area id="arm2" alt="" title="" href="" coords="209,693,207,631,144,632,134,629,100,627,65,632,63,695,46,705,33,713,27,724,22,730,52,732,93,728,113,724,179,726,211,726,211,703" shape="poly">
+				<area id="arm3" alt="" title="" href="" coords="209,632,335,633,345,627,406,627,425,634,425,724,211,724" shape="poly">
+				<area id="arm4" alt="" title="" href="" coords="426,635,446,630,508,630,521,618,525,609,536,609,537,651,535,721,521,735,516,729,502,738,492,728,429,727" shape="poly">
+				<area id="arm5" alt="" title="" href="" coords="310,614,310,495,343,491,348,483,351,462,403,462,403,482,435,494,435,616,412,620,405,626,349,626,349,617,318,616" shape="poly">
+				<area id="arm6" alt="" title="" href="" coords="109,864,110,739,158,738,191,740,196,731,219,728,269,728,286,740,346,739,343,864,258,864,254,875,233,881,213,875,210,865" shape="poly">
+				<area id="tro1" alt="" title="" href="" coords="695,736,786,802,784,815,777,822,764,835,754,848,738,868,730,881,721,890,706,899,691,900,674,899,663,892,657,889,647,887,631,878,618,861,614,845,615,830,618,809,624,792,641,769,662,745,680,751" shape="poly">
+				<area id="tro2" alt="" title="" href="" coords="696,736,698,723,707,713,690,674,661,676,659,661,664,649,666,641,673,627,681,619,692,616,696,608,709,615,721,621,736,626,756,632,771,636,789,640,807,644,823,646,845,650,863,651,864,662,865,672,866,686,866,695,868,708,876,711,876,838,867,839,864,885,855,875,846,859,832,846,837,822,828,815,808,816,836,803,846,787,840,776,801,785,788,801" shape="poly">
+				<area id="tro3" alt="" title="" href="" coords="876,709,998,709,998,837,876,836" shape="poly">
+				<area id="tro4" alt="" title="" href="" coords="1003,710,1009,698,1009,688,1010,678,1011,666,1012,653,1027,650,1044,649,1064,647,1084,641,1108,638,1124,632,1140,625,1158,619,1181,607,1183,623,1192,627,1197,634,1202,646,1202,655,1201,662,1198,667,1188,673,1194,678,1192,694,1181,702,1177,711,1175,721,1177,728,1177,740,1174,747,1168,752,1160,765,1156,772,1149,778,1138,791,1135,795,1125,804,1115,811,1097,817,1090,821,1083,832,1076,841,1072,857,1064,858,1055,860,1048,861,1040,869,1033,878,1024,883,1019,891,1011,896,1009,838,1001,836" shape="poly">
+				<area id="tro5" alt="" title="" href="" coords="673,534,653,514,669,504,738,481,745,483,751,491,781,484,837,474,865,650,826,647,798,641,768,635,731,625,700,610,676,593,663,575,661,558,665,548" shape="poly">
+				<area id="tro6" alt="" title="" href="" coords="839,474,852,474,877,472,902,470,930,468,962,471,994,471,1035,475,1008,651,1008,659,1007,673,1005,682,1006,694,1002,706,869,706,868,698,867,689,867,679,867,670,865,659,869,650" shape="poly">
+				<area id="tro7" alt="" title="" href="" coords="1039,476,1046,477,1060,478,1080,482,1108,488,1112,479,1123,472,1134,470,1142,472,1153,480,1163,485,1173,495,1179,506,1188,517,1201,531,1211,549,1216,567,1208,581,1194,596,1175,607,1155,618,1137,625,1119,631,1101,635,1084,639,1064,643,1039,647,1011,650" shape="poly">
+				<area id="asc1" alt="" title="" href="" coords="550,91,594,90,603,99,602,198,592,207,554,207,542,196,543,100" shape="poly">
+				<area id="asc2" alt="" title="" href="" coords="1151,253,1155,247,1200,247,1209,256,1209,349,1201,358,1156,358,1152,352" shape="poly">
+				<area id="asc3" alt="" title="" href="" coords="882,850,889,843,986,845,993,850,992,894,986,901,889,900,879,896" shape="poly">
+				<area id="asc4" alt="" title="" href="" coords="543,625,550,617,594,620,602,628,603,726,597,731,549,734,543,727" shape="poly">
+            </map>
+        </div>
+    </body>
+</html>

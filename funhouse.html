@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<!--VERSION 1.1-->
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <title>Joker's Funhouse</title>
+
+        <link rel="stylesheet" type="text/css" href="assets/css/conan.css">
+
+        <script src="lib/jquery-3.1.1.js"></script>
+        <script src="lib/mapconan.js"></script>
+        <script src="lib/raphael.min.js"></script>
+
+        <script type="text/javascript">
+		
+			var colors = `{
+               "4" : "#767777",
+			   "1" : "#01A3D6",
+               "2" : "#CAE8FC",
+			   "3" : "#EFF976"
+            }`;
+
+            var centers = `{
+				"sol1"  : {"A":[ 64,198],"promontory":false,"level":4},
+				"sol2"  : {"A":[ 240,175],"promontory":false,"level":4},
+				"sol3"  : {"A":[67,317],"B":[298,317],"promontory":false,"level":4},
+				"sol4"  : {"A":[ 484,306],"promontory":false,"level":4},
+				"sol5"  : {"A":[ 713,274],"promontory":false,"level":4},
+				"sol6"  : {"A":[ 939,307],"promontory":false,"level":4},
+				"sol7"  : {"A":[ 1174,320],"promontory":false,"level":4},
+				"sol8"  : {"A":[ 85,468],"promontory":false,"level":4},
+				"sol9"  : {"A":[ 131,553],"promontory":false,"level":4},
+				"sol10"  : {"A":[ 296,658],"promontory":false,"level":4},
+				"sol11"  : {"A":[ 212,741],"promontory":false,"level":4},
+				"sol12"  : {"A":[ 234,873],"promontory":false,"level":4},
+				"sol13"  : {"A":[ 513,626],"promontory":false,"level":4},
+				"sol14"  : {"A":[ 424,785],"promontory":false,"level":4},
+				"sol15"  : {"A":[ 537,886],"promontory":false,"level":4},
+				"sol16"  : {"A":[ 711,782],"promontory":false,"level":4},
+				"sol17"  : {"A":[ 766,666],"promontory":false,"level":4},
+				"sol18"  : {"A":[965,637],"B":[1161,670],"promontory":false,"level":4},
+				"sol19"  : {"A":[ 1158,498],"promontory":false,"level":4},
+				"toit1"  : {"A":[ 448,82],"promontory":true,"level":2},
+				"toit2"  : {"A":[ 673,84],"promontory":true,"level":2},
+				"toit3"  : {"A":[ 892,84],"promontory":true,"level":2},
+				"toit4"  : {"A":[ 1119,84],"promontory":true,"level":2},
+				"toit5"  : {"A":[ 293,489],"promontory":true,"level":2},
+				"toit6"  : {"A":[ 526,489],"promontory":true,"level":2},
+				"toit7"  : {"A":[ 755,489],"promontory":true,"level":2},
+				"toit8"  : {"A":[ 980,489],"promontory":true,"level":2},
+				"manege1"  : {"A":[ 126,818],"promontory":false,"level":4},
+				"manege2"  : {"A":[ 336,851],"promontory":true,"level":1},
+				"manege3"  : {"A":[ 544,808],"promontory":true,"level":2},
+				"manege4"  : {"A":[ 732,890],"promontory":false,"level":4},
+				"manege5"  : {"A":[ 1085,888],"promontory":true,"level":3}
+            }`;
+
+             var lines = [
+				['sol1', 'sol2'],
+				['sol1', 'sol3'],
+				['sol1', 'sol4'],
+				['sol1', 'sol5'],
+				['sol1', 'sol6'],
+				['sol1', 'sol7'],
+				['sol1', 'sol8'],
+				['sol1', 'sol9'],
+				['sol1', 'sol11'],
+				['sol1', 'sol12'],
+				
+				['sol2', 'sol3-B'],
+				['sol2', 'sol4'],
+				['sol2', 'sol8'],
+				['sol2', 'sol9'],
+				
+				['sol3-B', 'sol4'],
+				['sol3-B', 'sol5'],
+				['sol3-B', 'sol6'],
+				['sol3-B', 'sol7'],
+				['sol3-A', 'sol8'],
+				['sol3-A', 'sol9'],
+				['sol3-A', 'sol11'],
+				['sol3-A', 'sol12'],
+				
+				['sol4', 'sol5'],
+				['sol4', 'sol6'],
+				['sol4', 'sol7'],
+
+				['sol5', 'sol6'],
+				['sol5', 'sol7'],
+
+				['sol6', 'sol7'],
+
+				['sol7', 'sol19'],
+				['sol7', 'sol18-B'],
+				{
+                     "line" : ['manege5', 'sol7'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['sol8', 'sol9'],
+				['sol8', 'sol11'],
+				['sol8', 'sol12'],
+				{
+                     "line" : ['manege2', 'sol8'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['sol9', 'sol10'],
+				['sol9', 'sol11'],
+				['sol9', 'sol12'],
+				['sol9', 'sol14'],
+				['sol9', 'sol15'],
+				{
+                     "line" : ['manege2', 'sol9'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                },
+				
+				['sol10', 'sol11'],
+				['sol10', 'sol12'],
+				['sol10', 'sol13'],
+				['sol10', 'sol14'],
+				['sol10', 'sol15'],
+				['sol10', 'sol17'],
+				['sol10', 'sol18-A'],
+				
+				['sol11', 'sol12'],
+				['sol11', 'sol13'],
+				
+				['sol13', 'sol14'],
+				['sol13', 'sol16'],
+				['sol13', 'sol17'],
+				['sol13', 'sol18'],
+				
+				['sol14', 'sol15'],
+				
+				['sol15', 'sol16'],
+				['sol15', 'sol17'],
+				['sol15', 'sol18'],
+				
+				['sol16', 'sol17'],
+				['sol16', 'sol18'],
+				
+				['sol17', 'sol18'],
+				
+				['sol18-B', 'sol19'],
+				
+				['toit1', 'toit2'],
+				['toit1', 'toit3'],
+				['toit1', 'toit4'],
+				['toit1', 'toit5'],
+				['toit1', 'toit6'],
+				['toit1', 'toit7'],
+				['toit1', 'toit8'],
+				
+				['toit2', 'toit3'],
+				['toit2', 'toit4'],
+				['toit2', 'toit5'],
+				['toit2', 'toit6'],
+				['toit2', 'toit7'],
+				['toit2', 'toit8'],
+				
+				['toit3', 'toit4'],
+				['toit3', 'toit5'],
+				['toit3', 'toit6'],
+				['toit3', 'toit7'],
+				['toit3', 'toit8'],
+				
+				['toit4', 'toit5'],
+				['toit4', 'toit6'],
+				['toit4', 'toit7'],
+				['toit4', 'toit8'],
+				
+				['toit5', 'toit6'],
+				['toit5', 'toit7'],
+				['toit5', 'toit8'],
+				
+				['toit6', 'toit7'],
+				['toit6', 'toit8'],
+				
+				['toit7', 'toit8'],
+				
+				{
+                     "line" : ['toit1','sol3-B'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit2','sol3-B'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit3','sol3-B'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit4','sol3-B'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit5','sol3-B'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol3-B'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol3-B'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol3-B'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit1','sol4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit2','sol4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit3','sol4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit4','sol4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit5','sol4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit1','sol5'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit2','sol5'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit3','sol5'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit4','sol5'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit5','sol5'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol5'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol5'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol5'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit1','sol6'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit2','sol6'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit3','sol6'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit4','sol6'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit5','sol6'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol6'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol6'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol6'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit1','sol7'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit2','sol7'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit3','sol7'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit4','sol7'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit5','sol7'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol7'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol7'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol7'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit5','sol1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+
+				{
+                     "line" : ['toit1','sol2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit5','sol2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['toit1','manege3'],
+				['toit2','manege3'],
+				['toit3','manege3'],
+				['toit4','manege3'],
+				['toit5','manege3'],
+				['toit6','manege3'],
+				['toit7','manege3'],
+				['toit8','manege3'],
+				
+				{
+                     "line" : ['manege5','toit1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','toit2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','toit3'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','toit4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','toit5'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','toit6'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','toit7'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','toit8'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit5','sol10'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol10'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol10'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol10'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege2','sol10'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege3','sol10'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','sol10'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit5','sol11'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol11'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol11'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol11'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege2','sol11'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege3','sol11'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','sol11'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit5','sol12'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol12'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege2','sol12'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege3','sol12'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','sol12'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit5','sol13'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol13'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol13'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol13'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege2','sol13'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege3','sol13'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','sol13'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit5','sol14'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol14'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege2','sol14'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege3','sol14'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit8','sol15'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege2','sol15'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege3','sol15'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege4','sol15'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','sol15'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit5','sol16'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol16'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol16'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol16'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege3','sol16'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege4','sol16'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','sol16'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit5','sol17'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol17'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol17'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol17'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege3','sol17'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege4','sol17'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','sol17'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit5','sol18'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','sol18'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','sol18'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol18'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege3','sol18'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','sol18'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit5','manege2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','manege2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege3','manege2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege2','manege4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','manege2'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['manege3','manege4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','manege3'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit6','manege4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','manege4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','manege4'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit1','sol8'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit5','sol8'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit4','sol18-B'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit4','sol19'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit8','sol19'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','sol19'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['toit1','sol8'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit5','sol8'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['manege3','sol9'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit5','sol9'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				{
+                     "line" : ['manege1','sol1'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege1','sol3'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege1','sol8'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege1','sol9'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege1','sol10'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege1','sol11'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege1','sol12'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege1','sol13'],
+                     "debug" : false,
+                     "overhang" : false,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege2','manege1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege3','manege1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['manege5','manege1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit5','manege1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit6','manege1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['toit7','manege1'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+            ];
+
+            $(window).on("load", function() {
+                new Conan(centers, lines,colors);
+            });
+        </script>
+    </head>
+    <body>
+        <div id="options">
+            <ul>
+				<li>
+					<form>
+						<input type="checkbox" id="display-line" name="display-line" checked/><label for="display-line">Afficher lignes</label>
+						<input type="checkbox" id="display-zone" name="display-zone" checked/><label for="display-zone">Afficher zones</label>
+						<input type="checkbox" id="display-center" name="display-center" checked/><label for="display-center">Afficher centres</label>
+						<input type="checkbox" id="display-promontory" name="display-promontory"/><label for="display-promontory">Afficher promontoire</label>
+                        <input type="checkbox" id="display-level" name="display-level"/><label for="display-level">Afficher niveaux</label>
+					</form>
+				</li>
+        </div>
+        <div>
+            <img id="mapimage" src="assets/maps/funhouse.png" id="" usemap="#map" />
+            <map name="map" id="map">
+				<area id="sol1" alt="" title="" href="" coords="0,87,13,104,19,113,31,121,45,132,57,139,76,147,89,153,108,156,126,158,152,156,205,255,1,255" shape="poly">
+				<area id="sol2" alt="" title="" href="" coords="150,156,166,151,181,147,197,141,205,136,222,124,237,112,243,105,250,80,249,101,245,136,244,145,248,149,254,153,261,156,272,155,283,151,293,143,296,109,296,81,291,32,278,1,332,0,331,82,332,108,334,139,335,206,345,207,362,255,208,256" shape="poly">
+				<area id="sol3" alt="" title="" href="" coords="1,257,362,257,404,373,191,376,191,384,1,385" shape="poly">
+				<area id="sol4" alt="" title="" href="" coords="346,207,571,207,625,375,405,374" shape="poly">
+				<area id="sol5" alt="" title="" href="" coords="573,207,797,208,854,375,625,373" shape="poly">
+				<area id="sol6" alt="" title="" href="" coords="797,208,1010,208,1081,375,855,374" shape="poly">
+				<area id="sol7" alt="" title="" href="" coords="1011,207,1217,209,1217,403,1098,401,1099,378,1084,374" shape="poly">
+				<area id="sol8" alt="" title="" href="" coords="0,386,190,386,191,485,59,544,14,539,5,533,9,508,19,508,20,448,1,447" shape="poly">
+				<area id="sol9" alt="" title="" href="" coords="59,546,190,488,191,588,108,673,108,649,52,648,44,612,50,582,60,578" shape="poly">
+				<area id="sol10" alt="" title="" href="" coords="166,616,192,590,409,591,345,793,318,746,300,754" shape="poly">
+				<area id="sol11" alt="" title="" href="" coords="108,673,164,617,298,756,277,768,270,781,274,787,173,786,154,737,154,673" shape="poly">
+				<area id="sol12" alt="" title="" href="" coords="173,788,274,790,306,839,306,847,344,909,169,908,179,880,179,807" shape="poly">
+				<area id="sol13" alt="" title="" href="" coords="409,590,635,590,581,695,570,692,557,687,548,686,538,685,519,687,506,688,499,688,395,636" shape="poly">
+				<area id="sol14" alt="" title="" href="" coords="397,638,499,692,489,707,483,712,478,719,473,727,470,735,468,750,468,760,468,773,469,783,473,796,480,811,390,865,383,852,373,835,347,796" shape="poly">
+				<area id="sol15" alt="" title="" href="" coords="386,869,478,813,485,820,490,825,501,831,510,832,517,835,520,844,562,843,571,842,573,834,582,833,590,830,606,812,682,876,674,885,668,897,664,909,407,909" shape="poly">
+				<area id="sol16" alt="" title="" href="" coords="583,695,605,653,809,762,811,797,741,849,730,852,713,858,699,864,683,876,606,809,616,795,619,778,622,761,616,739,608,720,595,706" shape="poly">
+				<area id="sol17" alt="" title="" href="" coords="637,591,859,590,848,753,810,756,810,762,605,652" shape="poly">
+				<area id="sol18" alt="" title="" href="" coords="859,591,1095,591,1097,587,1216,587,1216,726,853,723,850,756,849,756,853,701,850,756" shape="poly">
+				<area id="sol19" alt="" title="" href="" coords="1098,405,1215,404,1215,585,1097,584" shape="poly">
+				<area id="toit1" alt="" title="" href="" coords="334,1,552,0,551,84,549,205,334,206,331,83" shape="poly">
+				<area id="toit2" alt="" title="" href="" coords="554,0,775,0,775,206,553,204" shape="poly">
+				<area id="toit3" alt="" title="" href="" coords="775,1,999,-1,1000,206,778,205" shape="poly">
+				<area id="toit4" alt="" title="" href="" coords="1001,0,1217,0,1217,206,1002,206" shape="poly">
+				<area id="toit5" alt="" title="" href="" coords="192,376,418,376,418,588,194,589" shape="poly">
+				<area id="toit6" alt="" title="" href="" coords="422,378,643,376,642,489,643,588,422,589" shape="poly">
+				<area id="toit7" alt="" title="" href="" coords="646,377,868,377,867,487,868,588,646,587" shape="poly">
+				<area id="toit8" alt="" title="" href="" coords="872,377,1096,377,1094,588,872,587" shape="poly">
+				<area id="manege1" alt="" title="" href="" coords="75,908,74,875,90,857,91,824,136,731,143,731,141,688,105,687,89,734,82,679,61,678,53,650,105,650,106,674,151,678,151,736,175,805,175,880,167,908,158,909" shape="poly">
+				<area id="manege2" alt="" title="" href="" coords="272,783,303,765,386,908,345,908" shape="poly">
+				<area id="manege3" alt="" title="" href="" coords="519,827,504,822,497,820,488,811,485,804,483,793,480,780,477,767,476,758,476,745,478,734,485,721,493,713,501,706,516,700,530,697,543,696,556,697,569,702,577,708,587,715,596,721,601,732,606,743,612,758,612,773,608,785,603,797,597,809,592,817,585,823,574,829,563,833,562,839,521,839,524,829" shape="poly">
+				<area id="manege4" alt="" title="" href="" coords="666,908,672,893,680,882,691,871,718,856,737,852,750,848,778,824,801,807,811,799,813,811,834,834,830,842,826,852,826,866,825,882,824,888,830,895,831,908" shape="poly">
+				<area id="manege5" alt="" title="" href="" coords="888,908,886,874,896,873,911,872,916,859,920,836,994,838,997,826,1047,828,1172,830,1192,838,1202,837,1214,833,1217,907" shape="poly">
+            </map>
+        </div>
+    </body>
+</html>

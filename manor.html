@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!--VERSION 1.1-->
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <title>Wayne's manor</title>
+
+        <link rel="stylesheet" type="text/css" href="assets/css/conan.css">
+
+        <script src="lib/jquery-3.1.1.js"></script>
+        <script src="lib/mapconan.js"></script>
+        <script src="lib/raphael.min.js"></script>
+
+        <script type="text/javascript">
+			
+			var colors = `{
+               "1" : "#01A3D6",
+               "2" : "#CAE8FC"
+            }`;
+			
+            var centers = `{            
+                "ext1"  : {"A":[161,216],"promontory":false,"level":1},
+                "ext2"  : {"A":[315,84],"promontory":false,"level":1},
+                "ext3"  : {"A":[709,10],"promontory":false,"level":1},
+                "ext4"  : {"A":[1072,11],"promontory":false,"level":1},
+                "ext5"  : {"A":[24,303],"promontory":false,"level":1},
+                "ext6"  : {"A":[360,259],"promontory":false,"level":1},
+                "ext7"  : {"A":[24,394],"promontory":false,"level":1},
+				"ext8"  : {"A":[422,443],"promontory":false,"level":1},
+                "ext9"  : {"A":[27,842],"promontory":false,"level":1},
+                "ext10"  : {"A":[197,875],"promontory":false,"level":1},
+                "ext11"  : {"A":[464,876],"promontory":false,"level":1},
+                "ext12"  : {"A":[662,883],"promontory":false,"level":1},
+                "ext13"  : {"A":[881,891],"promontory":false,"level":1},
+                "ext14"  : {"A":[1112,890],"promontory":false,"level":1},
+                "int1"  : {"A":[546,180],"promontory":false,"level":1},
+                "int2"  : {"A":[704,186],"promontory":false,"level":1},
+                "int3"  : {"A":[872,202],"promontory":false,"level":1},
+                "int4"  : {"A":[1075,194],"promontory":false,"level":1},
+                "int5"  : {"A":[532,414],"promontory":false,"level":1},
+                "int6"  : {"A":[431,503],"promontory":false,"level":1},
+                "int7"  : {"A":[670,430],"promontory":false,"level":1},
+                "int8"  : {"A":[867,417],"promontory":false,"level":1},
+                "int9"  : {"A":[1075,431],"promontory":false,"level":1},
+                "int10"  : {"A":[1066,683],"promontory":false,"level":1},
+                "int11"  : {"A":[867,591],"promontory":false,"level":1},
+                "int12"  : {"A":[867,716],"promontory":false,"level":1},
+                "int13"  : {"A":[661,587],"promontory":false,"level":1},
+                "int14"  : {"A":[472,593],"promontory":false,"level":1},
+                "int15"  : {"A":[247,609],"promontory":false,"level":1},
+                "int16"  : {"A":[244,465],"promontory":false,"level":1},
+                "esc1"  : {"A":[883,276],"promontory":false,"level":2}
+            }`;
+
+             var lines = [
+				['ext1', 'ext2'],
+				['ext1', 'ext5'],
+				['ext1', 'ext6'],
+				['ext1', 'ext7'],
+				['ext1', 'ext8'],
+				['ext1', 'int5'],
+				['ext1', 'int16'],
+				
+				['ext2', 'ext5'],
+				['ext2', 'ext6'],
+				['ext2', 'ext7'],
+				['ext2', 'ext8'],
+				['ext2', 'int16'],
+				['ext2', 'int6'],
+				
+				['ext3', 'ext4'],
+				['ext3', 'int3'],
+				['ext3', 'int3'],
+				
+				['ext4', 'int3'],
+				['ext4', 'int3'],
+				
+				['ext5', 'ext6'],
+				['ext5', 'ext7'],
+				['ext5', 'ext8'],
+				['ext5', 'ext9'],
+				['ext5', 'int5'],
+				['ext5', 'int16'],
+				
+				['ext6', 'ext7'],
+				['ext6', 'ext8'],
+				['ext6', 'int5'],
+				['ext6', 'int6'],
+				['ext6', 'int16'],
+				
+				['ext7', 'ext9'],
+				['ext7', 'int16'],
+				
+				['ext8', 'int5'],
+				['ext8', 'int6'],
+				['ext8', 'int16'],
+				
+				['ext9', 'ext10'],
+				['ext9', 'ext11'],
+				['ext9', 'ext12'],
+				['ext9', 'ext13'],
+				['ext9', 'ext14'],
+				
+				['ext10', 'ext11'],
+				['ext10', 'ext12'],
+				['ext10', 'ext13'],
+				['ext10', 'ext14'],
+				['ext10', 'int15'],
+				
+				['ext11', 'ext12'],
+				['ext11', 'ext13'],
+				['ext11', 'ext14'],
+				['ext11', 'int13'],
+				['ext11', 'int14'],
+				
+				['ext12', 'ext13'],
+				['ext12', 'ext14'],
+				['ext12', 'int13'],
+				
+				['ext13', 'ext14'],
+				['ext13', 'int8'],
+				['ext13', 'int11'],
+				['ext13', 'int12'],
+				{
+                     "line" : ['esc1', 'ext13'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['int1', 'int2'],
+				['int1', 'int5'],
+				
+				['int2', 'int3'],
+				
+				['int3', 'int4'],
+				
+				['int4', 'int9'],
+				
+				['int5', 'int6'],
+				['int5', 'int7'],
+				
+				['int6', 'int7'],
+				['int6', 'int16'],
+				
+				['int7', 'int8'],
+				['int7', 'int11'],
+				['int7', 'int13'],
+				
+				['int8', 'int9'],
+				['int8', 'int11'],
+				['int8', 'int12'],
+				{
+                     "line" : ['esc1', 'int8'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['int9', 'int10'],
+				['int9', 'int11'],
+				
+				['int10', 'int11'],
+				
+				['int11', 'int12'],
+				['int11', 'int13'],
+				['int11', 'int14'],
+				{
+                     "line" : ['esc1', 'int11'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				{
+                     "line" : ['esc1', 'int12'],
+                     "debug" : false,
+                     "overhang" : true,
+                     "overhangPosition" : 45
+                 },
+				
+				['int13', 'int14'],
+				
+				['int14', 'int15'],
+				
+				['int15', 'int16'],
+				
+            ];
+
+            $(window).on("load", function() {
+                new Conan(centers, lines,colors);
+            });
+        </script>
+    </head>
+    <body>
+        <div id="options">
+            <ul>
+				<li>
+					<form>
+						<input type="checkbox" id="display-line" name="display-line" checked/><label for="display-line">Afficher lignes</label>
+						<input type="checkbox" id="display-zone" name="display-zone" checked/><label for="display-zone">Afficher zones</label>
+						<input type="checkbox" id="display-center" name="display-center" checked/><label for="display-center">Afficher centres</label>
+						<input type="checkbox" id="display-promontory" name="display-promontory"/><label for="display-promontory">Afficher promontoire</label>
+                        <input type="checkbox" id="display-level" name="display-level"/><label for="display-level">Afficher niveaux</label>
+					</form>
+				</li>
+        </div>
+        <div>
+            <img id="mapimage" src="assets/maps/manor.png" id="" usemap="#map" />
+            <map name="map" id="map">
+				<area id="ext1" alt="" title="" href="" coords="1,0,208,0,251,63,259,67,270,74,276,85,276,100,278,106,349,162,341,174,330,188,324,200,315,214,266,189,255,214,270,224,260,241,246,257,229,272,207,287,179,295,154,291,140,284,109,278,108,285,82,276,64,261,48,244,44,228,30,202,1,216" shape="poly">
+				<area id="ext2" alt="" title="" href="" coords="211,0,543,0,543,19,476,21,454,68,453,92,435,98,419,106,403,115,388,127,373,139,360,151,349,162,278,106,280,96,278,83,272,71,262,66,251,62" shape="poly">
+				<area id="ext3" alt="" title="" href="" coords="545,1,545,18,605,19,636,70,801,70,826,23,883,24,883,1" shape="poly">
+				<area id="ext4" alt="" title="" href="" coords="885,0,885,23,965,21,993,70,1217,72,1217,0" shape="poly">
+				<area id="ext5" alt="" title="" href="" coords="1,223,16,245,23,258,33,252,46,267,55,275,65,283,76,289,89,295,106,301,106,310,138,316,143,339,0,351" shape="poly">
+				<area id="ext6" alt="" title="" href="" coords="143,318,144,339,405,333,452,286,453,94,438,98,418,107,399,119,379,134,362,149,349,165,336,182,319,211,308,238,294,257,278,276,257,292,234,305,209,311,186,318,169,314,166,322" shape="poly">
+				<area id="ext7" alt="" title="" href="" coords="144,340,250,337,249,371,110,374,85,421,85,473,76,474,76,630,1,630,1,352" shape="poly">
+				<area id="ext8" alt="" title="" href="" coords="254,337,405,335,452,288,450,470,372,470,373,463,363,463,362,436,377,432,363,414,345,381,349,353,278,344,272,372,254,374" shape="poly">
+				<area id="ext9" alt="" title="" href="" coords="0,632,76,632,76,814,80,815,78,907,1,909" shape="poly">
+				<area id="ext10" alt="" title="" href="" coords="80,814,311,813,312,909,80,907" shape="poly">
+				<area id="ext11" alt="" title="" href="" coords="313,812,373,745,374,736,588,736,590,809,590,908,313,908" shape="poly">
+				<area id="ext12" alt="" title="" href="" coords="593,810,742,811,742,908,591,908" shape="poly">
+				<area id="ext13" alt="" title="" href="" coords="749,811,757,852,990,854,991,909,745,908,743,811" shape="poly">
+				<area id="ext14" alt="" title="" href="" coords="992,854,1030,854,1031,808,1206,809,1206,734,1217,733,1217,908,993,909" shape="poly">
+				<area id="int1" alt="" title="" href="" coords="518,309,491,285,466,283,463,77,486,24,594,23,620,78,614,84,611,124,622,163,622,193,613,167,610,284,548,285,562,308" shape="poly">
+				<area id="int2" alt="" title="" href="" coords="625,161,616,122,616,87,799,87,799,109,776,160,778,202,799,168,799,222,616,223,614,171,625,203" shape="poly">
+				<area id="int3" alt="" title="" href="" coords="780,161,802,109,803,77,827,26,963,25,986,69,988,107,933,158,933,205,991,171,987,219,803,220,802,165,781,193" shape="poly">
+				<area id="int4" alt="" title="" href="" coords="937,161,993,109,993,85,1215,86,1212,280,1163,282,1085,305,1053,305,1113,283,1048,282,1049,274,1044,275,1043,222,994,220,994,167,937,199" shape="poly">
+				<area id="int5" alt="" title="" href="" coords="500,472,464,482,464,289,491,290,517,311,562,311,568,314,552,289,565,289,565,303,583,321,582,365,565,360,565,470" shape="poly">
+				<area id="int6" alt="" title="" href="" coords="368,488,463,485,498,476,562,475,563,484,583,473,582,520,563,540,562,573,294,574,293,558,369,531" shape="poly">
+				<area id="int7" alt="" title="" href="" coords="586,322,569,302,569,289,770,289,752,321,752,362,768,356,768,486,752,472,753,523,767,544,768,574,699,574,691,542,640,542,632,573,569,572,569,542,586,522,587,468,570,477,570,364,587,366" shape="poly">
+				<area id="int8" alt="" title="" href="" coords="756,322,778,322,782,316,793,313,801,308,809,305,818,311,822,316,827,324,825,348,823,363,813,365,812,376,813,384,822,387,828,387,902,385,913,385,922,381,924,374,914,365,913,348,916,326,934,304,943,303,948,309,954,317,1021,300,1021,318,956,337,956,388,1022,383,1021,436,956,438,772,440,772,352,756,357" shape="poly">
+				<area id="int9" alt="" title="" href="" coords="958,338,1023,322,1024,298,1047,292,1048,288,1094,288,1044,309,1081,311,1165,289,1213,288,1210,567,1171,567,1084,540,1030,541,1098,568,1025,569,1023,551,959,526,959,479,1023,493,1025,380,959,388" shape="poly">
+				<area id="int10" alt="" title="" href="" coords="958,555,1023,586,1025,574,1116,573,1050,547,1085,547,1168,575,1210,575,1213,716,1191,718,1193,792,1023,793,1023,640,959,601" shape="poly">
+				<area id="int11" alt="" title="" href="" coords="773,445,956,444,1021,440,1019,489,955,475,954,527,1019,550,1019,579,954,553,954,605,1019,641,1019,689,954,653,771,651,773,634,755,599,755,582,772,579,773,543,756,522,757,479,773,490" shape="poly">
+				<area id="int12" alt="" title="" href="" coords="771,657,954,657,1019,692,1015,838,771,838" shape="poly">
+				<area id="int13" alt="" title="" href="" coords="569,580,636,580,642,547,689,547,696,580,752,581,753,602,767,636,767,796,604,795,603,722,549,721,569,669" shape="poly">
+				<area id="int14" alt="" title="" href="" coords="369,596,298,637,297,580,563,580,562,669,544,720,300,722,302,703,369,651" shape="poly">
+				<area id="int15" alt="" title="" href="" coords="364,602,363,648,291,703,291,795,92,794,91,578,158,579,233,550,302,549,230,579,289,580,291,640,298,641" shape="poly">
+				<area id="int16" alt="" title="" href="" coords="363,529,315,544,229,544,158,570,91,571,91,423,114,380,268,379,341,384,358,415,373,430,362,433,360,463,371,464,371,471,289,472,288,486,363,487" shape="poly">
+				<area id="esc1" alt="" title="" href="" coords="745,285,745,226,1038,226,1038,271,1016,272,962,294,925,295,917,313,911,335,911,359,911,381,825,383,838,370,841,353,846,331,851,310,856,288,809,281,807,274,773,273,773,285" shape="poly">
+            </map>
+        </div>
+    </body>
+</html>
