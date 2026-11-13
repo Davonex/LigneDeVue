@@ -31,3 +31,20 @@ body {
 .home a {
     display: block;
 }
+
+/* Map image + Raphael overlay, scaled together */
+#map-stage {
+    position: relative;
+    display: inline-block;
+    line-height: 0;
+}
+
+#map-stage #mapimage {
+    display: block;
+}
+
+#map-stage svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

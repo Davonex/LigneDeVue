@@ -1,53 +1,186 @@
-<div class="cWidgetContainer " data-role="widgetReceiver" data-orientation="vertical" data-widgetarea="sidebar">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lignes de vue</title>
+    <style>
+        @font-face {
+            font-family: 'rajdhani';
+            src: url('assets/fonts/rajdhani-medium.ttf') format('truetype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
 
-	<ul class="ipsList_reset">
-				
-					
-		<li class="ipsWidget ipsWidget_vertical ipsBox" data-blockid="plugin_6_sodTxtWidget_264egxdh4" data-blockconfig="true" data-blocktitle="Custom Text" data-blockerrormessage="Ce bloc ne peut pas être affiché. Cela peut provenir du fait qu’il nécessite d’être configuré, qu’il est incapable de s’afficher sur cette page, ou qu’il sera affiché après le rechargement de cette page." data-controller="core.front.widgets.block">
-			<h3 class="ipsType_reset ipsWidget_title">Lignes de vue:</h3>
+        :root {
+            --bg: #0e1013;
+            --surface: #171a1f;
+            --border: #2a2f37;
+            --text: #e6e8eb;
+            --muted: #8b939e;
+            --accent: #f5c518;
+            --radius: 10px;
+        }
 
-			<div class="ipsWidget_inner ipsPad">
-				
-				
-				<p class="ipsType_reset ipsType_medium ipsType_light">
-					<u> Boite de base: </u> 
-				</p>
-				<ul>
-					<li>
-						<a href="https://davonex.github.io/LigneDeVue/bank.html">The Bank</a>
-					</li>
-					<li>
-						<a href="https://davonex.github.io/LigneDeVue/chemicals.html">ACE Chemical</a>
-					</li>
-					<li>
-						<a href="https://davonex.github.io/LigneDeVue/crimealley.html">Crime Alley</a>
-					</li>
-					<li>
-						<a href="https://davonex.github.io/LigneDeVue/subway.html">The Subway</a>
-					</li>
-				</ul>
+        * { box-sizing: border-box; }
 
-				<p class="ipsType_reset ipsType_medium ipsType_light"> 
-					<u>  Arkham: </u> 
-				<p>
-				<ul>
-					<li>      
-						<a href="https://davonex.github.io/LigneDeVue/asylum.html">Arkham Asylum</a>
-					</li>
-					<li>
-						<a href="https://davonex.github.io/LigneDeVue/funhouse.html">Joker's Funhouse</a>
-					</li>
-				</ul>
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'rajdhani', 'Segoe UI', sans-serif;
+            line-height: 1.4;
+        }
 
-				<p class="ipsType_reset ipsType_medium ipsType_light"> 
-					<u>  Manor: </u> 
-				</p>
-				<ul><li>      <a href="https://davonex.github.io/LigneDeVue/batcave.html">The Batcave</a>
-				</li><li>     <a href="https://davonex.github.io/LigneDeVue/crimealleynight.html">Crime Alley by night</a>
-				</li><li>     <a href="https://davonex.github.io/LigneDeVue/manor.html">Wayne Manor</a></li></ul> 
-			</div>
-		</li>
-					
-				
-	</ul>
-</div>
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 16px 48px;
+        }
+
+        header h1 {
+            margin: 0 0 4px;
+            font-size: 2.4rem;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        header p {
+            margin: 0 0 32px;
+            color: var(--muted);
+            font-size: 1.1rem;
+        }
+
+        section { margin-bottom: 40px; }
+
+        section h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 0 16px;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--accent);
+        }
+
+        section h2::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            display: block;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            color: inherit;
+            text-decoration: none;
+            transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+        }
+
+        .card:hover,
+        .card:focus-visible {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
+            outline: none;
+        }
+
+        .card .thumb {
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .card img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .3s ease;
+        }
+
+        .card:hover img,
+        .card:focus-visible img { transform: scale(1.04); }
+
+        .card .name {
+            padding: 12px 14px;
+            font-size: 1.2rem;
+            letter-spacing: .02em;
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <header>
+            <h1>Lignes de vue</h1>
+            <p>Choisissez une carte, puis survolez une zone pour afficher ses lignes de vue.</p>
+        </header>
+
+        <section>
+            <h2>Boîte de base</h2>
+            <div class="grid">
+                <a class="card" href="bank.html">
+                    <div class="thumb"><img src="assets/maps/thumbs/bank.jpg" alt="Carte The Bank" loading="lazy"></div>
+                    <div class="name">The Bank</div>
+                </a>
+                <a class="card" href="chemicals.html">
+                    <div class="thumb"><img src="assets/maps/thumbs/chemicals.jpg" alt="Carte ACE Chemical" loading="lazy"></div>
+                    <div class="name">ACE Chemical</div>
+                </a>
+                <a class="card" href="crimealley.html">
+                    <div class="thumb"><img src="assets/maps/thumbs/crimealley.jpg" alt="Carte Crime Alley" loading="lazy"></div>
+                    <div class="name">Crime Alley</div>
+                </a>
+                <a class="card" href="subway.html">
+                    <div class="thumb"><img src="assets/maps/thumbs/subway.jpg" alt="Carte The Subway" loading="lazy"></div>
+                    <div class="name">The Subway</div>
+                </a>
+            </div>
+        </section>
+
+        <section>
+            <h2>Arkham</h2>
+            <div class="grid">
+                <a class="card" href="asylum.html">
+                    <div class="thumb"><img src="assets/maps/thumbs/asylum.jpg" alt="Carte Arkham Asylum" loading="lazy"></div>
+                    <div class="name">Arkham Asylum</div>
+                </a>
+                <a class="card" href="funhouse.html">
+                    <div class="thumb"><img src="assets/maps/thumbs/funhouse.jpg" alt="Carte Joker's Funhouse" loading="lazy"></div>
+                    <div class="name">Joker's Funhouse</div>
+                </a>
+            </div>
+        </section>
+
+        <section>
+            <h2>Manor</h2>
+            <div class="grid">
+                <a class="card" href="batcave.html">
+                    <div class="thumb"><img src="assets/maps/thumbs/batcave.jpg" alt="Carte The Batcave" loading="lazy"></div>
+                    <div class="name">The Batcave</div>
+                </a>
+                <a class="card" href="crimealleynight.html">
+                    <div class="thumb"><img src="assets/maps/thumbs/crimealley_night.jpg" alt="Carte Crime Alley by night" loading="lazy"></div>
+                    <div class="name">Crime Alley by night</div>
+                </a>
+                <a class="card" href="manor.html">
+                    <div class="thumb"><img src="assets/maps/thumbs/manor.jpg" alt="Carte Wayne Manor" loading="lazy"></div>
+                    <div class="name">Wayne Manor</div>
+                </a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
